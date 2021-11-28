@@ -17,29 +17,26 @@ public class WordCount {
        extends Mapper<Object, Text, Text, IntWritable>{
 
     private final static IntWritable one = new IntWritable(1);
-    private Text word = new Text();
-    private String part1;
-    private String part2;
-    private String part3;
+    private Text word3 = new Text();
+    pivate ArrayList<String> parts = new ArrayList<String>();
+    
 
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
-      String words = value.toString()
-      words = words.replaceAll("\\p{Punct}","");
-      String[] book = words.split("\\s");
+      StringTokenizer itr = new StringTokenizer(value.toString());
       
-      int len = book.length;
-      for(int i=0, i+2 < len; i++) {
-      	if(len <= 1) continue;
-        
-        part1 = book[i];
-        part2 = book[i+1];
-        part3 = book[i+2];
-        
-        word.set(part1+" "+part2+" "+part3)
-        context.write(word, one);
+      if (itr.hasMoreTokens()) parts.add(itr.nextToken());
+      if (itr.hasMoreTokens()) parts.add(itr.nextToken());
+      if (itr.hasMoreTokens()) parts.add(itr.nextToken());
+      word3.set(String.join(" ", parts));
+      context.write(word3, one);
+
+      while (itr.hasMoreTokens()) {
+        parts.remove(0);
+        parts.add(itr.nextToken());
+        word3.set(String.join(" ", parts));
+        context.write(word3, one);
       }
-      
     }
   }
 
