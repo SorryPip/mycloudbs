@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -18,7 +19,7 @@ public class WordCount {
 
     private final static IntWritable one = new IntWritable(1);
     private Text word3 = new Text();
-    pivate ArrayList<String> parts = new ArrayList<String>();
+    private ArrayList<String> parts = new ArrayList<String>();
     
 
     public void map(Object key, Text value, Context context
@@ -28,9 +29,11 @@ public class WordCount {
       if (itr.hasMoreTokens()) parts.add(itr.nextToken());
       if (itr.hasMoreTokens()) parts.add(itr.nextToken());
       if (itr.hasMoreTokens()) parts.add(itr.nextToken());
-      word3.set(String.join(" ", parts));
-      context.write(word3, one);
-
+      if (!parts.isEmpty()) {
+    	  word3.set(String.join(" ", parts));
+          context.write(word3, one);
+      }
+      
       while (itr.hasMoreTokens()) {
         parts.remove(0);
         parts.add(itr.nextToken());
