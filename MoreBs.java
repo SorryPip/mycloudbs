@@ -41,7 +41,7 @@ public class MoreBs {
       counter = 0;
       */
       
-      String[] words = value.toString().replaceAll("[^a-z\\s]","").toLowerCase().split("\\s"); 
+      String[] words = value.toString().replaceAll("\\p{Punct}","").toLowerCase().replaceAll("\\s+", " ").split("\\s"); 
       
       for (int i=0; i<words.size() - 3; i++) {
     	  wordSB.append(words.get(i));
