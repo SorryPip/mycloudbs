@@ -6,11 +6,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce*;
 
 public class MoreBs {
 
@@ -71,15 +67,17 @@ public class MoreBs {
 
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
-    Job job = Job.getInstance(conf, "word count");
+    conf.set("mapred.max.split.size", "69420");
     
+    Job job = Job.getInstance(conf, "word count");
     job.setJarByClass(MoreBs.class);
     job.setMapperClass(WCMapper.class);
     job.setReducerClass(WCReducer.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
     job.setInputFormatClass(CombineTextInputFormat.class);
-    job.set("mapred.max.split.size", "69420");
+    
+    
     
     FileInputFormat.addInputPath(job, new Path(args[0]));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
