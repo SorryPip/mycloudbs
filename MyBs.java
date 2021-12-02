@@ -33,7 +33,7 @@ public class MyBs {
       while (itr.hasMoreTokens()) {
         word1.set(word2);
         word2.set(itr.nextToken());
-        context.write(word1 + word2, one);
+        context.write(new Text(word1 + word2), one);
       }
     }
   }
