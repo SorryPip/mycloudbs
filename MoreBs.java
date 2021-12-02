@@ -28,10 +28,15 @@ public class MoreBs {
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString().replaceAll("\\p{Punct}","").toLowerCase());
-
+      
+      Integer counter = 0;
       while (itr.hasMoreTokens()) {
     	  words.add(itr.nextToken());
+        counter +=1;
       }
+      System.out.println("OG Word Count "+counter.toString());
+      counter = 0;
+      
       for (int i=0; i<words.size() - 3; i++) {
     	  wordSB.append(words.get(i));
     	  wordSB.append(" ");
@@ -42,8 +47,10 @@ public class MoreBs {
     	  wordText.set(wordSB.toString());
     	  context.write(wordText, one);
     	  wordSB.setLength(0);
+        counter +=1;
       }
-      
+      System.out.println("NGRAM Word Count "+counter.toString());
+      counter = 0;
     }
   }
 
