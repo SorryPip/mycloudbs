@@ -24,7 +24,7 @@ public class MyBs {
 
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
-      StringTokenizer itr = new StringTokenizer(value.toString());
+      StringTokenizer itr = new StringTokenizer(value.toString(), " ");
       
       if (itr.hasMoreTokens()) parts.add(itr.nextToken());
       if (itr.hasMoreTokens()) parts.add(itr.nextToken());
@@ -36,7 +36,7 @@ public class MyBs {
       
       while (itr.hasMoreTokens()) {
         parts.remove(0);
-        parts.add(itr.nextToken(" "));
+        parts.add(itr.nextToken());
         word3.set(String.join(" ", parts));
         context.write(word3, one);
       }
