@@ -19,7 +19,7 @@ public class MoreBs {
 
     private final static IntWritable one = new IntWritable(1);
     // contains the three words as a Text
-    private javax.xml.soap.Text wordText = new Text();
+    private Text wordText = new Text();
  // contains the three words as a StringBuffer
     StringBuffer wordSB = new StringBuffer("");
     // list containing all words
