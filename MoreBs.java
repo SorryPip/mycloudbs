@@ -27,7 +27,7 @@ public class MoreBs {
 
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
-      StringTokenizer itr = new StringTokenizer(value.toString(), " ");
+      StringTokenizer itr = new StringTokenizer(value.toString().replaceAll("\\p{Punct}",""));
 
       while (itr.hasMoreTokens()) {
     	  words.add(itr.nextToken());
