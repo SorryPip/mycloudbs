@@ -35,7 +35,6 @@ public class MoreBs {
       while (itr.hasMoreTokens()) {
     	  words.add(itr.nextToken());
       }
-
       */
       
       String[] words = value.toString().replaceAll("\\p{Punct}","").toLowerCase().replaceAll("\\s+", " ").trim().split("\\s"); 
@@ -73,13 +72,18 @@ public class MoreBs {
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
     Job job = Job.getInstance(conf, "word count");
+    
     job.setJarByClass(MoreBs.class);
     job.setMapperClass(WCMapper.class);
     job.setReducerClass(WCReducer.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
+    job.setInputFormatClass(CombineTextInputFormat.class);
+    job.set("mapred.max.split.size", "69420");
+    
     FileInputFormat.addInputPath(job, new Path(args[0]));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
+    
     System.exit(job.waitForCompletion(true) ? 0 : 1);
   }
 }
