@@ -39,7 +39,7 @@ public class MoreBs {
     	  wordSB.append(" ");
     	  wordSB.append(words.get(i+2));
     	  wordSB.append(" ");
-    	  wordText.setData(wordSB.toString());
+    	  wordText.set(wordSB.toString());
     	  context.write(wordText, one);
     	  wordSB.setLength(0);
       }
