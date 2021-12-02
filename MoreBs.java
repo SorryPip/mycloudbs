@@ -41,11 +41,11 @@ public class MoreBs {
       String[] words = value.toString().replaceAll("\\p{Punct}","").toLowerCase().replaceAll("\\s+", " ").split("\\s"); 
       
       for (int i=0; i<words.length - 3; i++) {
-    	  wordSB.append(words.get(i));
+    	  wordSB.append(words[i]);
     	  wordSB.append(" ");
-    	  wordSB.append(words.get(i+1));
+    	  wordSB.append(words[i+1]);
     	  wordSB.append(" ");
-    	  wordSB.append(words.get(i+2));
+    	  wordSB.append(words[i+2]);
 
     	  wordText.set(wordSB.toString());
     	  context.write(wordText, one);
