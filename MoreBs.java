@@ -1,3 +1,5 @@
+// input gs://coc105-gutenburg-10000books/
+// output gs://biggerthanlksbucket/outputbsfinal/
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -21,32 +23,27 @@ public class MoreBs {
     private final static IntWritable one = new IntWritable(1);
     // contains the three words as a Text
     private Text wordText = new Text();
- // contains the three words as a StringBuffer
+    // contains the three words as a StringBuffer
     StringBuffer wordSB = new StringBuffer("");
-    // list containing all words
-    ArrayList<String> words = new ArrayList<String>();
 
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
-      
-      
-      /*
-      StringTokenizer itr = new StringTokenizer(value.toString().replaceAll("\\p{Punct}","").toLowerCase());
-      
-      while (itr.hasMoreTokens()) {
-    	  words.add(itr.nextToken());
-      }
-      */
-      
+
+      // replaceAll \\s+ to get rid of extra blank spaces
+      // trim to get rid of leading blank spaces
       String[] words = value.toString().replaceAll("\\p{Punct}","").toLowerCase().replaceAll("\\s+", " ").trim().split("\\s"); 
       
+      
+      // creating an n-gram for each three consecutive words
       for (int i=0; i<words.length - 3; i++) {
+        // create the n-gram
     	  wordSB.append(words[i]);
     	  wordSB.append(" ");
     	  wordSB.append(words[i+1]);
     	  wordSB.append(" ");
     	  wordSB.append(words[i+2]);
-
+        
+        // add the n-gram to context, reset the buffer
     	  wordText.set(wordSB.toString());
     	  context.write(wordText, one);
     	  wordSB.setLength(0);
@@ -72,8 +69,9 @@ public class MoreBs {
 
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
-    conf.set("mapred.max.split.size", "69420");
-    
+    // adjusting filesize to get good number of splits, aiming for 400 cus i have 4 nodes
+    conf.set("mapreduce.input.fileinputformat.split.maxsize", "8000000");
+
     Job job = Job.getInstance(conf, "word count");
     job.setJarByClass(MoreBs.class);
     job.setMapperClass(WCMapper.class);
@@ -82,6 +80,8 @@ public class MoreBs {
     job.setOutputValueClass(IntWritable.class);
     job.setInputFormatClass(CombineTextInputFormat.class);
     
+    // combiner added
+    job.setCombinerClass(WCReducer.class);
     
     
     FileInputFormat.addInputPath(job, new Path(args[0]));
