@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -17,23 +18,27 @@ public class MyBs {
        extends Mapper<Object, Text, Text, IntWritable>{
 
     private final static IntWritable one = new IntWritable(1);
-    private Text word = new Text();
-    private Text word1 = new Text();
-    private Text word2 = new Text();
+    private Text word3 = new Text();
+    private ArrayList<String> parts = new ArrayList<String>();
+    
 
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString());
-
-      //Tokenised strings contain punctuations, e.g. comma, and fullstop
-      //Your task is to ensure that only words themselves are used as keys
-
-      word1.set(itr.nextToken());
-      word2.set(word1);
+      
+      if (itr.hasMoreTokens()) parts.add(itr.nextToken());
+      if (itr.hasMoreTokens()) parts.add(itr.nextToken());
+      if (itr.hasMoreTokens()) parts.add(itr.nextToken());
+      if (!parts.isEmpty()) {
+    	  word3.set(String.join(" ", parts));
+          context.write(word3, one);
+      }
+      
       while (itr.hasMoreTokens()) {
-        word1.set(word2);
-        word2.set(itr.nextToken());
-        context.write(new Text(word1 + word2), one);
+        parts.remove(0);
+        parts.add(itr.nextToken());
+        word3.set(itr.nextToken());
+        context.write(word3, one);
       }
     }
   }
