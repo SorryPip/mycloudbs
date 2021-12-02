@@ -18,7 +18,11 @@ public class MyBs {
        extends Mapper<Object, Text, Text, IntWritable>{
 
     private final static IntWritable one = new IntWritable(1);
+    // word will hold the iteration added to the list
+    private String word;
+    // word3 will hold the 3 ngram
     private Text word3 = new Text();
+    // parts will hold the words making up the ngram
     private ArrayList<String> parts = new ArrayList<String>();
     
 
@@ -36,7 +40,8 @@ public class MyBs {
       
       while (itr.hasMoreTokens()) {
         parts.remove(0);
-        parts.add(itr.nextToken());
+        word = itr.nextToken();
+        parts.add(word);
         word3.set(String.join(" ", parts));
         context.write(word3, one);
       }
